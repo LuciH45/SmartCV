@@ -29,7 +29,7 @@ class DocToTextScreen extends StatelessWidget {
 
             if (snapshot.hasData) {
               return SingleChildScrollView(
-                child: Text(snapshot.data),
+                child: Text(snapshot.data ?? 'No data available'),
               );
             } else {
               return const Center(

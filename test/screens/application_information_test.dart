@@ -6,6 +6,10 @@ import '../helper.dart';
 void main() {
   testWidgets('ApplicationInformation builds without problem',
       (WidgetTester tester) async {
-    await tester.pumpWidget(buildTestableWidget(ApplicationInformation()));
+    await tester.pumpWidget(buildTestableWidget(
+      ApplicationInformation(),
+      navigatorObserver: [MockNavigatorObserver()],
+      routes: {'/': (context) => ApplicationInformation()},
+    ));
   });
 }

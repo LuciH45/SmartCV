@@ -4,7 +4,7 @@ import 'package:cam_scanner/model/scanned_document.dart';
 import 'package:cam_scanner/screens/doc_to_text_screen.dart';
 import 'package:cam_scanner/widgets/alert_modal.dart';
 import 'package:flutter/material.dart';
-import 'package:fontisto_flutter/fontisto_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
@@ -26,7 +26,7 @@ class DocViewer extends StatelessWidget {
         canChangePageFormat: false,
         actions: [
           PdfPreviewAction(
-            icon: const Icon(Istos.file_1),
+            icon: const Icon(FontAwesomeIcons.file),
             onPressed: (BuildContext context, LayoutCallback build,
                 PdfPageFormat pageFormat) {
               if (file.lengthSync() < 1000000) {

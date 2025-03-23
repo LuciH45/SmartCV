@@ -2,10 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cam_scanner/service/scanned_document_repository.dart';
-import 'package:injectable/injectable.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:image/image.dart' as Im;
+import 'package:injectable/injectable.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 
 @lazySingleton
@@ -18,7 +17,11 @@ class GeneratePdfService {
     final pdf = pw.Document();
 
     for (final element in imagePaths) {
-      final Im.Image image = Im.decodeImage(await File(element).readAsBytes());
+      final Im.Image? decodedImage = Im.decodeImage(await File(element).readAsBytes());
+      if (decodedImage == null) {
+        throw Exception('Failed to decode image: $element');
+      }
+      final Im.Image image = decodedImage;
       final Uint8List imageFileBytes = Im.encodeJpg(image, quality: 60);
 
       pdf.addPage(
@@ -26,7 +29,7 @@ class GeneratePdfService {
           build: (pw.Context context) {
             return pw.Center(
               child: pw.Image(
-                  PdfImage.file(pdf.document, bytes: imageFileBytes)
+                  pw.MemoryImage(imageFileBytes)
               ),
             );
           },
@@ -37,7 +40,7 @@ class GeneratePdfService {
 
     await _scannedDocumentRepository.saveScannedDocument(
       firstPageUri: imagePaths.first,
-      document: pdf.save(),
+      document: await pdf.save(),
     );
   }
 }

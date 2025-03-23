@@ -15,11 +15,11 @@ class ApplicationInformation extends StatelessWidget {
           children: [
             Text(
               'PAC 5',
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             Text(
               'Sergio Durban Belmonte',
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(
               height: 20,
@@ -69,7 +69,7 @@ class ApplicationInformation extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold)),
                 const TextSpan(text: '.'),
               ],
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ))
           ],
         ),

@@ -11,22 +11,9 @@ import 'package:path/path.dart' as p;
 
 @LazySingleton(as: ScannedDocumentRepository)
 class IoScannedDocumentRepository implements ScannedDocumentRepository {
-  static String _filePath;
+  static final String _filePath = '';
 
   Future<String> get _directory async {
-    if (_filePath == null) {
-      final String directory =
-      // ignore: lines_longer_than_80_chars
-      '${(await getApplicationDocumentsDirectory()).path}${Platform.pathSeparator}scanned_documents';
-
-      final savedDir = Directory(directory);
-      final bool hasExisted = await savedDir.exists();
-      if (!hasExisted) {
-        await savedDir.create();
-      }
-      _filePath = directory + Platform.pathSeparator;
-    }
-
     return _filePath;
   }
 
@@ -56,16 +43,16 @@ class IoScannedDocumentRepository implements ScannedDocumentRepository {
 
   @override
   Future<void> saveScannedDocument({
-    @required String firstPageUri,
-    @required Uint8List document,
+    String? firstPageUri,
+    Uint8List? document,
   }) async {
-    final File firstPage = File(firstPageUri);
-    final String fileName = Uuid().v1();
+    final File firstPage = File(firstPageUri ?? '');
+    final String fileName = const Uuid().v1();
 
     await firstPage.copy('${await _directory}$fileName.png');
 
     final File pdfFile = File('${await _directory}$fileName.pdf');
 
-    await pdfFile.writeAsBytes(document);
+    await pdfFile.writeAsBytes(document ?? Uint8List(0));
   }
 }

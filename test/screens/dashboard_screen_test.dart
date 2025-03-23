@@ -29,7 +29,13 @@ void main() {
 
     when(_scannerFactory.getAll()).thenAnswer((_) => Future.value([]));
 
-    await tester.pumpWidget(buildTestableWidget(DashboardScreen()));
+    await tester.pumpWidget(
+      buildTestableWidget(
+        DashboardScreen(),
+        routes: {},
+        navigatorObserver: [],
+      ),
+    );
 
     expect(
       find.byType(CircularProgressIndicator),
@@ -45,7 +51,13 @@ void main() {
 
     when(_scannerFactory.getAll()).thenAnswer((_) => Future.value([]));
 
-    await tester.pumpWidget(buildTestableWidget(DashboardScreen()));
+    await tester.pumpWidget(
+      buildTestableWidget(
+        DashboardScreen(),
+        routes: {},
+        navigatorObserver: [],
+      ),
+    );
 
     await tester.pump();
 
@@ -63,7 +75,13 @@ void main() {
 
     when(_scannerFactory.getAll()).thenAnswer((_) => Future.error(Error()));
 
-    await tester.pumpWidget(buildTestableWidget(DashboardScreen()));
+    await tester.pumpWidget(
+      buildTestableWidget(
+        DashboardScreen(),
+        routes: {},
+        navigatorObserver: [],
+      ),
+    );
 
     await tester.pump();
 
@@ -96,7 +114,7 @@ void main() {
     await tester.tap(find.byType(GestureDetector).first);
     await tester.pumpAndSettle();
 
-    verify(mockObserver.didPush(any, any));
+    verify(mockObserver.didPush(any as Route<dynamic>, any as Route<dynamic>?));
     expect(find.text('/info'), findsOneWidget);
   });
 
@@ -122,7 +140,7 @@ void main() {
     await tester.tap(find.byType(FloatingActionButton).first);
     await tester.pumpAndSettle();
 
-    verify(mockObserver.didPush(any, any));
+    verify(mockObserver.didPush(any as Route<dynamic>, any as Route<dynamic>?));
     expect(find.text('/doc-scan'), findsOneWidget);
   });
 
@@ -146,6 +164,7 @@ void main() {
     await tester.pumpWidget(
       buildTestableWidget(
         DashboardScreen(),
+        routes: {},
         navigatorObserver: [mockObserver],
       ),
     );
@@ -179,6 +198,6 @@ void main() {
       findsOneWidget,
     );
 
-    verify(mockObserver.didPush(any, any));
+    verify(mockObserver.didPush(any as Route<dynamic>, any as Route<dynamic>?));
   });
 }

@@ -5,8 +5,8 @@ import 'package:cam_scanner/service/generate_pdf_service.dart';
 import 'package:edge_detection/edge_detection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:fontisto_flutter/fontisto_flutter.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:r_dotted_line_border/r_dotted_line_border.dart';
 
@@ -35,8 +35,9 @@ class _DocScanScreenState extends State<DocScanScreen> {
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
+        child: CarouselSlider.builder(
+          itemCount: _documents.length + 1,
+          itemBuilder: (BuildContext context, int index, int realIndex) {
             if (index < _documents.length) {
               return Stack(
                 alignment: Alignment.center,
@@ -53,7 +54,7 @@ class _DocScanScreenState extends State<DocScanScreen> {
                     elevation: 0.0,
                     fillColor: const Color(0x50000000),
                     child: const Icon(
-                      Istos.trash,
+                      FontAwesomeIcons.trash,
                       size: 35.0,
                     ),
                     padding: const EdgeInsets.all(15.0),
@@ -64,9 +65,10 @@ class _DocScanScreenState extends State<DocScanScreen> {
             } else {
               return InkWell(
                 onTap: () {
-                  EdgeDetection.detectEdge.then((value) {
-                    if (value != null) {
-                      _documents.add(value);
+                  EdgeDetection.detectEdge('/path/to/save/image.jpg').then((value) {
+                    if (value == true) {
+                      const savedImagePath = '/path/to/save/image.jpg';
+                      _documents.add(savedImagePath);
                       setState(() {});
                     }
                   });
@@ -82,18 +84,18 @@ class _DocScanScreenState extends State<DocScanScreen> {
                       dottedSpace: 10,
                     ),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Istos.plus_a,
+                        Icon(
+                          FontAwesomeIcons.plus,
                           size: 35,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           height: 15,
                         ),
-                        const Text(
+                        Text(
                           'Add new image',
                           style: TextStyle(
                             fontSize: 25,
@@ -106,12 +108,11 @@ class _DocScanScreenState extends State<DocScanScreen> {
               );
             }
           },
-          itemCount: _documents.length + 1,
-          pagination: const SwiperPagination(),
-          control: const SwiperControl(),
-          viewportFraction: 0.8,
-          itemHeight: 20,
-          scale: 0.9,
+          options: CarouselOptions(
+            height: double.infinity,
+            viewportFraction: 0.8,
+            enlargeCenterPage: true,
+          ),
         ),
       ),
       bottomNavigationBar: Material(
@@ -127,7 +128,7 @@ class _DocScanScreenState extends State<DocScanScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     final generatePdfService =
                         GetIt.I.get<GeneratePdfService>();
@@ -140,8 +141,10 @@ class _DocScanScreenState extends State<DocScanScreen> {
                       Navigator.of(context).pop();
                     });
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
                   child: const Text('CONTINUE'),
-                  color: Theme.of(context).bottomAppBarColor,
                 ),
               ],
             ),

@@ -1,30 +1,22 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AlertModal {
   BuildContext _context;
 
   void alert({
-    @required String title,
-    @required String desc,
+    required String title,
+    required String desc,
   }) {
-   Alert(
+    AwesomeDialog(
       context: _context,
-      type: AlertType.error,
+      dialogType: DialogType.error,
+      animType: AnimType.bottomSlide,
       title: title,
       desc: desc,
-      buttons: [
-        DialogButton(
-          child: const Text(
-            'Accept',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(_context),
-          width: 120,
-        )
-      ],
+      btnOkOnPress: () {},
+      btnOkText: 'Accept',
+      btnOkColor: Colors.red,
     ).show();
   }
 

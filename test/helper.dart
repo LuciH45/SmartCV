@@ -5,8 +5,8 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 Widget buildTestableWidget(
   Widget widget, {
-  List<NavigatorObserver> navigatorObserver,
-      Map<String, WidgetBuilder> routes,
+  required List<NavigatorObserver> navigatorObserver,
+      required Map<String, WidgetBuilder> routes,
 }) {
   return MediaQuery(
     data: const MediaQueryData(),

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fontisto_flutter/fontisto_flutter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Reemplazamos fontisto_flutter
 import 'package:get_it/get_it.dart';
 
 import '../model/scanned_document.dart';
@@ -56,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onTap: () => Navigator.of(context).pushNamed('/info'),
             child: const Padding(
               padding: EdgeInsets.only(right: 20.0),
-              child: Icon(Istos.info),
+              child: Icon(FontAwesomeIcons.infoCircle), // Cambiamos Istos.info
             ),
           ),
         ],
@@ -81,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Center(
                 child: Text(
                   'To scan your first document, click the floating button.',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
             );
