@@ -62,11 +62,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.androidx.material.icons.extended)
 
-    // ML Kit dependencies - using the exact names from your version catalog
     implementation(libs.text.recognition)
     implementation(libs.mlkit.vision.common)
 
-    // Coroutines - using the exact names from your version catalog
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.play.services)
 }

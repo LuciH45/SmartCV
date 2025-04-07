@@ -736,7 +736,64 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 "generate" -> {
-                                    GenerateScreen()
+                                    GenerateScreen(
+                                        onCvGenerated = { generatedCvId ->
+                                            // Load the generated CV
+                                            coroutineScope.launch {
+                                                val generatedCv = cvRepository.loadCv(generatedCvId)
+                                                if (generatedCv != null) {
+                                                    // Set the selected CV
+                                                    selectedCv = generatedCv
+                                                    currentCvId = generatedCvId
+
+                                                    // Navigate to CV edit screen
+                                                    currentScreen = "cvEdit"
+                                                } else {
+                                                    // If CV not found, show error
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Error al cargar el CV generado",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
+
+                                "voiceCvEdit" -> {
+                                    // The selectedCv would be loaded based on the generatedCvId
+                                    selectedCv?.let { cv ->
+                                        CvEditScreen(
+                                            cvData = cv,
+                                            onSave = { updatedCv ->
+                                                coroutineScope.launch {
+                                                    // Save CV data
+                                                    cvRepository.saveCvData(updatedCv)
+
+                                                    // Update selected CV
+                                                    selectedCv = updatedCv
+                                                    currentCvId = updatedCv.id
+
+                                                    // Reload CVs
+                                                    cvs = cvRepository.loadAllCvs()
+
+                                                    // Navigate to CV view screen
+                                                    currentScreen = "cvView"
+
+                                                    Toast.makeText(
+                                                        context,
+                                                        "CV saved successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                        )
+                                    } ?: run {
+                                        // If no CV data, go back to home
+                                        selectedTab = "home"
+                                        currentScreen = "home"
+                                    }
                                 }
 
                                 "settings" -> {
