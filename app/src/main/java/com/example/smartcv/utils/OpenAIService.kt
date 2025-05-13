@@ -50,8 +50,10 @@ object OpenAIService {
             // Create JSON request body for OpenAI
             val prompt = if (isSpanish) {
                 """
-                Extrae información estructurada para un CV a partir de esta transcripción en español.
-                Devuelve SOLO un objeto JSON con la siguiente estructura exacta, sin texto adicional:
+                Analiza cuidadosamente el contenido de la siguiente transcripción en español y extrae toda la información útil para construir una hoja de vida (currículum vitae) de forma estructurada. Usa el entendimiento del significado y contexto de lo que se dice, no solo palabras clave.
+
+                Devuelve ÚNICAMENTE un objeto JSON con la siguiente estructura exacta, sin texto adicional ni explicaciones:
+                
                 {
                   "personalInfo": {
                     "fullName": "",
@@ -79,19 +81,26 @@ object OpenAIService {
                       "description": ""
                     }
                   ],
-                  "abilities": ["habilidad1", "habilidad2", "habilidad3"]
+                  "abilities": ["", "", ""]
                 }
                 
-                Asegúrate de extraer toda la información posible y estructurarla correctamente.
-                Si algún campo no está presente en la transcripción, déjalo vacío.
-                NO incluyas ningún texto adicional, SOLO el objeto JSON.
+                Instrucciones:
                 
-                Transcripción: $transcript
+                - Analiza el contenido completo para entender el perfil de la persona, sus estudios, experiencia laboral y habilidades.
+                - Usa criterio semántico para determinar a qué sección pertenece cada fragmento de la transcripción.
+                - Si hay información relevante pero no completa (por ejemplo, sin fechas), inclúyela igualmente en el campo correspondiente y deja vacíos los datos faltantes.
+                - Si algún campo no tiene información en la transcripción, déjalo como una cadena vacía "".
+                - No incluyas explicaciones ni comentarios, solo el JSON.
+                
+                Transcripción:
+                $transcript
                 """
             } else {
                 """
-                Extract structured CV information from this transcript. 
-                Return a JSON object with the following structure:
+                Carefully analyze the following transcript in Spanish and extract all relevant information to build a structured résumé (CV). Use your understanding of meaning and context, not keyword matching.
+
+                Return ONLY a JSON object in the exact structure below, with no extra text or explanations:
+                
                 {
                   "personalInfo": {
                     "fullName": "",
@@ -119,10 +128,17 @@ object OpenAIService {
                       "description": ""
                     }
                   ],
-                  "abilities": ["skill1", "skill2", "skill3"]
+                  "abilities": ["", "", ""]
                 }
                 
-                Transcript: $transcript
+                Instructions:
+                - Analyze the entire transcript using semantic reasoning to determine the appropriate section for each piece of information.
+                - If relevant information is present but incomplete (e.g., missing dates), include it and leave the missing fields blank.
+                - Leave fields as empty strings ("") if the information is not present.
+                - Return strictly and only the JSON object.
+                
+                Transcript:
+                $transcript
                 """
             }
 
@@ -132,12 +148,25 @@ object OpenAIService {
                 "You are a CV parsing assistant that extracts structured information from transcripts."
             }
 
+            // Replace your current jsonBody construction with this:
+            val escapedPrompt = prompt.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t")
+
+            val escapedSystemPrompt = systemPrompt.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t")
+
             val jsonBody = """
                 {
                   "model": "gpt-3.5-turbo",
                   "messages": [
-                    {"role": "system", "content": "$systemPrompt"},
-                    {"role": "user", "content": "$prompt"}
+                    {"role": "system", "content": "$escapedSystemPrompt"},
+                    {"role": "user", "content": "$escapedPrompt"}
                   ],
                   "temperature": 0.2
                 }
